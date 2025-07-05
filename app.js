@@ -195,7 +195,6 @@ function isLoggedIn(req, res, next) {
     res.redirect('/login');
 }
 
-// Start server
 let port = process.env.PORT || 3000;
 app.listen(port, function () {
     console.log("Server Has Started! at http://localhost:3000");
