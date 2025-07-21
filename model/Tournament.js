@@ -1,6 +1,6 @@
 
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost:27017/playhiveDB').then(() => 
+mongoose.connect('mongodb+srv://kamleshkshirsagar80:aHlG6uxAPFBFxokW@cluster0.u9ubrnw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(() => 
     {
     console.log('Connection Established for Tournament');
 }).catch(err => {
