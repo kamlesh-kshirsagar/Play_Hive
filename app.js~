@@ -8,7 +8,7 @@ const express = require("express"),
         require("passport-local-mongoose")
 const User = require("./model/User");
 let app = express();
-mongoose.connect("mongodb://localhost/27017");
+mongoose.connect("mongodb+srv://kamleshkshirsagar80:aHlG6uxAPFBFxokW@cluster0.u9ubrnw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(require("express-session")({
