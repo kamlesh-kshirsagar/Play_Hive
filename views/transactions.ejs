@@ -73,6 +73,15 @@
                     <li><a href="/leaderboard">Leaderboard</a></li>
                     <li><a href="/about">About</a></li>
                     <li><a href="/contact">Contact</a></li>
+                     <% if (locals.currentUser) { %>
+                        <li><a  href="/transactions "style="color: var(--secondary);">My Transactions</a></li>
+                    <% } %>
+                    <% if (locals.currentUser) { %>
+                        <!-- <li><a href="/transactions">My Transactions</a></li> -->
+                        <% if (currentUser.isAdmin) { %>
+                            <li><a href="/admin" style="color: #e11d48; font-weight: bold;">Manage Tournaments</a></li>
+                        <% } %>
+                    <% } %>
                 </ul>
             </nav>
             <div class="auth-buttons">
@@ -149,6 +158,7 @@
                         <li><a href="#">Rules</a></li>
                         <li><a href="#">FAQ</a></li>
                         <li><a href="/contact">Contact Us</a></li>
+                        
                     </ul>
                 </div>
                 <div class="footer-section">

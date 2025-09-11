@@ -1,0 +1,64 @@
+PlayHiveMsc Project Overview
+
+1. Overall Working Flow
+
+User Journey
+- Registration & Login: Users register and log in. Passwords are hashed. Sessions are used for authentication.
+- Browsing Tournaments: Users view tournaments on the /tournament page, fetched from MongoDB.
+- Joining a Tournament: Users click 'Register Now', go to /join?id=<tournamentId>, see details, and pay.
+- Payment & Transaction: Razorpay payment is triggered. On success, a transaction is recorded and user is registered.
+- Admin Management: Admins log in, access /admin, and manage tournaments (add/edit/delete, set entry fee/prizes).
+
+2. RESTful API & Route Structure
+
+User Authentication
+- POST /register — Register a new user
+- POST /login — Log in a user
+- GET /logout — Log out
+
+Tournament Management
+- GET /tournament — List all tournaments
+- GET /join?id=<tournamentId> — Join/payment page
+- GET /admin — Admin panel
+- POST /admin/tournament — Add tournament (admin)
+- POST /admin/tournament/delete/:id — Delete tournament (admin)
+
+Transactions & Payments
+- POST /create-order — Create Razorpay order
+- POST /verify-payment — Verify payment and record transaction
+
+3. Razorpay Integration & Transaction Flow
+
+Step-by-Step Payment Flow
+1. User clicks 'Pay & Join' (join page)
+2. Frontend POSTs to /create-order with amount, tournamentId, tournamentName
+3. Backend creates Razorpay order, returns order details
+4. Frontend opens Razorpay modal, user pays
+5. On success, paymentId/orderId/signature sent to /verify-payment
+6. Backend verifies payment, records Transaction in MongoDB
+
+4. Key Models
+
+User
+- username, password (hashed), email, phone, gamename, gameid, isAdmin, createdAt
+
+Tournament
+- tname, gamename, gameid, date, entryFee, prize1, prize2, prize3
+
+Transaction
+- userId, username, tournamentId, tournamentName, amount, paymentId, orderId, status, paymentMethod, createdAt
+
+5. Security & Best Practices
+- Passwords hashed with bcrypt
+- Sessions for authentication
+- Admin routes protected by isAdmin
+- Payments verified server-side
+- (Optional) Add more input validation
+
+6. Interview Tips
+- RESTful API with clear separation of logic
+- Razorpay integrated for secure payments
+- Role-based admin access
+- UI reflects live database state
+
+(Optional improvements: error handling, email verification, pagination, user tracking per tournament) 

@@ -20,6 +20,15 @@
                     <li><a href="/leaderboard">Leaderboard</a></li>
                     <li><a href="/about">About</a></li>
                     <li><a href="/contact">Contact</a></li>
+                    <% if (locals.currentUser) { %>
+                        <li><a  href="/transactions">My Transactions</a></li>
+                    <% } %>
+                    <% if (locals.currentUser) { %>
+                        <!-- <li><a href="/transactions">My Transactions</a></li> -->
+                        <% if (currentUser.isAdmin) { %>
+                            <li><a href="/admin" style="color: #e11d48; font-weight: bold;">Manage Tournaments</a></li>
+                        <% } %>
+                    <% } %>
                 </ul>
             </nav>
             <div class="auth-buttons">
@@ -29,6 +38,7 @@
                 <% } else { %>
                     <a href="/login" class="btn btn-outline">Login</a>
                     <a href="/register" class="btn btn-primary">Register</a>
+                    <a href="/login?admin=1" class="btn btn-danger" style="margin-left: 10px;">Admin Login</a>
                 <% } %>
             </div>
         </div>

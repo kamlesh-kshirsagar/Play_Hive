@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>PlayHive - BGMI Tournament Management</title>
     <link rel="stylesheet" type="text/css" href="/style.css">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
     <!-- Header Section -->
@@ -19,10 +20,25 @@
                     <li><a href="/leaderboard">Leaderboard</a></li>
                     <li><a href="/about">About</a></li>
                     <li><a href="/contact">Contact</a></li>
+                    <% if (locals.currentUser) { %>
+                        <li><a  href="/transactions">My Transactions</a></li>
+                    <% } %>
+                    <% if (locals.currentUser) { %>
+                        <!-- <li><a href="/transactions">My Transactions</a></li> -->
+                        <% if (currentUser.isAdmin) { %>
+                            <li><a href="/admin" style="color: #e11d48; font-weight: bold;">Manage Tournaments</a></li>
+                        <% } %>
+                    <% } %>
                 </ul>
             </nav>
             <div class="auth-buttons">
-                <a href="/logout" class="btn btn-outline">LogOut</a>
+                <% if (locals.currentUser) { %>
+                    <span class="user-welcome">Welcome, <%= currentUser.username %></span>
+                    <a href="/logout" class="btn btn-outline">Logout</a>
+                <% } else { %>
+                    <a href="/login" class="btn btn-outline">Login</a>
+                    <a href="/register" class="btn btn-primary">Register</a>
+                <% } %>
             </div>
         </div>
     </header>
@@ -30,6 +46,16 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
+            <% if(locals.error) { %>
+                <div class="alert alert-danger">
+                    <%= error %>
+                </div>
+            <% } %>
+            <% if(locals.success) { %>
+                <div class="alert alert-success">
+                    <%= success %>
+                </div>
+            <% } %>
         </div>
     </section>
 
@@ -37,48 +63,47 @@
     <section class="tournaments">
         <div class="container">
             <div class="section-header">
-                <h2>Active Tournaments</h2>
+                <h2>Join Tournament</h2>
             </div>
+            <% if (tournament) { %>
             <div class="tournament-grid">
-                <!-- Tournament Card 1 -->
                 <div class="tournament-card">
                     <div class="tournament-map">
-                        <img src="/images/erangle.jpg" alt="Erangel Map">
-                        <div class="map-name">Erangel</div>
+                        <img src="/images/<%= tournament.gamename ? tournament.gamename.toLowerCase() : 'main' %>.jpg" alt="<%= tournament.tname %> Map">
+                        <div class="map-name"><%= tournament.tname %></div>
                     </div>
                     <div class="tournament-info">
                         <div class="registration">
-                            <div class="price">₹199 Entry</div>
-                            <div class="slots">62/100 Registered</div>
+                            <div class="price">₹<%= tournament.entryFee %> Entry</div>
+                            <div class="slots">0/100 Registered</div>
                         </div>
                         <div class="progress-container">
-                            <div class="progress-bar" style="width: 62%;"></div>
+                            <div class="progress-bar" style="width: 0%;"></div>
                         </div>
                         <div class="prize-distribution">
                             <h4>Prize Distribution</h4>
                             <ul class="prizes">
                                 <li>
                                     <span class="position first">1st Place</span>
-                                    <span class="amount">₹5,000</span>
+                                    <span class="amount">₹<%= tournament.prize1 %></span>
                                 </li>
                                 <li>
                                     <span class="position second">2nd Place</span>
-                                    <span class="amount">₹2,500</span>
+                                    <span class="amount">₹<%= tournament.prize2 %></span>
                                 </li>
                                 <li>
                                     <span class="position third">3rd Place</span>
-                                    <span class="amount">₹1,000</span>
+                                    <span class="amount">₹<%= tournament.prize3 %></span>
                                 </li>
                             </ul>
                         </div>
-                        <form action="/join" method="post">
-                            <input type="hidden" name="tname" value="Erangle_199_15_march_2025_15.30">
-                            <button type="submit" class="btn btn-primary">Confirm And Pay</button>
-                        </form>
+                        <button id="rzp-button1" class="btn btn-primary">Pay ₹<%= tournament.entryFee %> & Join</button>
                     </div>
                 </div>
-                </form>
             </div>
+            <% } else { %>
+            <div class="alert alert-warning">No tournament selected. Please go back and select a tournament to join.</div>
+            <% } %>
         </div>
     </section>
 
@@ -99,17 +124,17 @@
                 <div class="footer-section">
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Tournaments</a></li>
-                        <li><a href="#">Leaderboard</a></li>
+                        <li><a href="/tournament">Tournaments</a></li>
+                        <li><a href="/leaderboard">Leaderboard</a></li>
                         <li><a href="#">Rules</a></li>
                         <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="/contact">Contact Us</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h3>Contact Info</h3>
-                    <p>Email: info@playhive.com</p>
-                    <p>Phone: +91 9876543210</p>
+                    <p>Email: playhive04@gmail.com</p>
+                    <p>Phone: +91 8624077761</p>
                     <p>Address: 123 Gaming Street, Esports City, India</p>
                 </div>
             </div>
@@ -118,63 +143,87 @@
             </div>
         </div>
     </footer>
-<!-- 
+
     <script>
-        // Basic JavaScript for handling tournaments
         document.addEventListener('DOMContentLoaded', function() {
-            // Tournament data (would be fetched from backend in real application)
-            const tournaments = [
-                {
-                    id: 1,
-                    map: 'Erangel',
-                    price: 199,
-                    registered: 62,
-                    maxSlots: 100,
-                    prizes: [5000, 2500, 1000]
-                },
-                {
-                    id: 2,
-                    map: 'Miramar',
-                    price: 299,
-                    registered: 78,
-                    maxSlots: 100,
-                    prizes: [8000, 4000, 2000]
-                },
-                {
-                    id: 3,
-                    map: 'Vikendi',
-                    price: 149,
-                    registered: 45,
-                    maxSlots: 100,
-                    prizes: [3500, 1500, 750]
-                },
-                {
-                    id: 4,
-                    map: 'Sanhok',
-                    price: 399,
-                    registered: 92,
-                    maxSlots: 100,
-                    prizes: [10000, 5000, 2500]
-                }
-            ];
-            
-            // Register button event handlers
-            const registerButtons = document.querySelectorAll('.tournament-card .btn');
-            registerButtons.forEach((button, index) => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Check if slots are available
-                    if (tournaments[index].registered < tournaments[index].maxSlots) {
-                        //alert(`Registration successful for ${tournaments[index].map} tournament!`);
-                        // In a real application, this would send a request to the server
-                        // and update the UI after successful registration
+            // Razorpay payment for Tournament
+            document.getElementById('rzp-button1').addEventListener('click', function() {
+                // Create order first
+                fetch('/create-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        amount: <%= tournament ? tournament.entryFee : 0 %>,
+                        tournamentId: '<%= tournament ? tournament._id : '' %>',
+                        tournamentName: '<%= tournament ? tournament.tname : '' %>'
+                    }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        var options = {
+                            "key": "rzp_test_YOUR_KEY_HERE", // Replace with your Razorpay Key ID
+                            "amount": <%= tournament ? tournament.entryFee * 100 : 0 %>, // Amount in paise
+                            "currency": "INR",
+                            "name": "PlayHive",
+                            "description": "Tournament Entry Fee - <%= tournament ? tournament.tname : '' %>",
+                            "image": "/images/logo.png", // Replace with your logo
+                            "order_id": data.order.id,
+                            "handler": function (response) {
+                                // Send payment details to server
+                                var paymentData = {
+                                    paymentId: response.razorpay_payment_id,
+                                    orderId: response.razorpay_order_id,
+                                    signature: response.razorpay_signature,
+                                    tournamentId: '<%= tournament ? tournament._id : '' %>',
+                                    tournamentName: '<%= tournament ? tournament.tname : '' %>',
+                                    amount: <%= tournament ? tournament.entryFee : 0 %>
+                                };
+                                // Send payment verification to server
+                                fetch('/verify-payment', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(paymentData),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        alert('Payment successful! You have joined the tournament.');
+                                        window.location.href = '/tournament';
+                                    } else {
+                                        alert('Payment verification failed. Please contact support.');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    alert('An error occurred during payment verification.');
+                                });
+                            },
+                            "prefill": {
+                                "name": "<%= locals.currentUser ? currentUser.username : '' %>",
+                                "email": "",
+                                "contact": ""
+                            },
+                            "theme": {
+                                "color": "#7e22ce"
+                            }
+                        };
+                        var rzp1 = new Razorpay(options);
+                        rzp1.open();
                     } else {
-                        alert(`Sorry, the ${tournaments[index].map} tournament is full!`);
+                        alert('Failed to create order. Please try again.');
                     }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while creating the order.');
                 });
             });
         });
-    </script> -->
+    </script>
 </body>
 </html>

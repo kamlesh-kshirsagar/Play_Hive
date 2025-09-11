@@ -3,7 +3,7 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
-mongoose.connect('mongodb+srv://kamleshkshirsagar80:aHlG6uxAPFBFxokW@cluster0.u9ubrnw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(() => 
+mongoose.connect('mongodb://localhost:27017/playhiveDB').then(() => 
     {
     console.log('Connection Established for User');
 }).catch(err => {
@@ -47,6 +47,10 @@ var UserSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -75,10 +79,8 @@ UserSchema.methods.comparePassword = async function(candidatePassword) {
     }
 };
 
-//User.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('users', UserSchema)
 
-//module.exports= mongoose.model('User', User, 'users'); // 'users' is the collection name
 
 

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel - Tournament Management</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                 <h1>Play<span>Hive</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/tournament">Tournaments</a></li>
+                    <li><a href="/leaderboard">Leaderboard</a></li>
+                    <li><a href="/about" >About</a></li>
+                    <li><a href="/contact"">Contact</a></li>
+                    <% if (locals.currentUser) { %>
+                        <li><a  href="/transactions">My Transactions</a></li>
+                    <% } %>
+                    <% if (locals.currentUser) { %>
+                        <!-- <li><a href="/transactions">My Transactions</a></li> -->
+                        <% if (currentUser.isAdmin) { %>
+                            <li><a href="/admin" style="color: var(--secondary);">Manage Tournaments</a></li>
+                        <% } %>
+                    <% } %>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <% if (locals.currentUser) { %>
+                    <span class="user-welcome">Welcome, <%= currentUser.username %></span>
+                    <a href="/logout" class="btn btn-outline">Logout</a>
+                <% } else { %>
+                    <a href="/login" class="btn btn-outline">Login</a>
+                    <a href="/register" class="btn btn-primary">Register</a>
+                    <a href="/login?admin=1" class="btn btn-danger" style="margin-left: 10px;">Admin Login</a>
+                <% } %>
+            </div>
+        </div>
+    </header>
+    <main class="container">
+        <h2>Manage Tournaments</h2>
+        <section>
+            <h3>Add New Tournament</h3>
+            <form action="/admin/tournament" method="POST" class="admin-form">
+                <label>Tournament Name: <input type="text" name="tname" required></label><br>
+                <label>Game Name: <input type="text" name="gamename" required></label><br>
+                <label>Game ID: <input type="number" name="gameid" required></label><br>
+                <label>Date: <input type="datetime-local" name="date" required></label><br>
+                <label>Entry Fee: <input type="number" name="entryFee" required></label><br>
+                <label>1st Prize: <input type="number" name="prize1" required></label><br>
+                <label>2nd Prize: <input type="number" name="prize2" required></label><br>
+                <label>3rd Prize: <input type="number" name="prize3" required></label><br>
+                <button type="submit" class="btn btn-primary">Add Tournament</button>
+            </form>
+        </section>
+        <section>
+            <h3>All Tournaments</h3>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Game</th>
+                        <th>Game ID</th>
+                        <th>Date</th>
+                        <th>Entry Fee</th>
+                        <th>1st Prize</th>
+                        <th>2nd Prize</th>
+                        <th>3rd Prize</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% tournaments.forEach(function(t) { %>
+                        <tr>
+                            <td><%= t.tname %></td>
+                            <td><%= t.gamename %></td>
+                            <td><%= t.gameid %></td>
+                            <td><%= t.date ? t.date.toLocaleString() : '' %></td>
+                            <td>₹<%= t.entryFee %></td>
+                            <td>₹<%= t.prize1 %></td>
+                            <td>₹<%= t.prize2 %></td>
+                            <td>₹<%= t.prize3 %></td>
+                            <td>
+                                <form action="/admin/tournament/delete/<%= t._id %>" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this tournament?')">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</body>
+</html> 

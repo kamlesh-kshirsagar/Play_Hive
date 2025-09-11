@@ -9,7 +9,6 @@
     
 </head>
 <body>
-    <!-- Header Section (Same as Home Page) -->
     <header>
         <div class="container header-content">
             <div class="logo">
@@ -22,10 +21,25 @@
                     <li><a href="/leaderboard">Leaderboard</a></li>
                     <li><a href="/about" >About</a></li>
                     <li><a href="/contact" style="color: var(--secondary);">Contact</a></li>
+                    <% if (locals.currentUser) { %>
+                        <li><a  href="/transactions">My Transactions</a></li>
+                    <% } %>
+                    <% if (locals.currentUser) { %>
+                        <!-- <li><a href="/transactions">My Transactions</a></li> -->
+                        <% if (currentUser.isAdmin) { %>
+                            <li><a href="/admin" style="color: #e11d48; font-weight: bold;">Manage Tournaments</a></li>
+                        <% } %>
+                    <% } %>
                 </ul>
             </nav>
             <div class="auth-buttons">
-                <a href="/logout" class="btn btn-outline">LogOut</a>
+                <% if (locals.currentUser) { %>
+                    <span class="user-welcome">Welcome, <%= currentUser.username %></span>
+                    <a href="/logout" class="btn btn-outline">Logout</a>
+                <% } else { %>
+                    <a href="/login" class="btn btn-outline">Login</a>
+                    <a href="/register" class="btn btn-primary">Register</a>
+                <% } %>
             </div>
         </div>
     </header>

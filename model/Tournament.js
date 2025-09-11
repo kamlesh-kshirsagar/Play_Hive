@@ -1,6 +1,6 @@
 
 const mongoose = require('mongoose')
-mongoose.connect('mongodb+srv://kamleshkshirsagar80:aHlG6uxAPFBFxokW@cluster0.u9ubrnw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(() => 
+mongoose.connect('mongodb://localhost:27017/playhiveDB').then(() => 
     {
     console.log('Connection Established for Tournament');
 }).catch(err => {
@@ -26,6 +26,22 @@ var Tournament = new mongoose.Schema({
     },
     tname: {
         type: String
+    },
+    entryFee: {
+        type: Number,
+        required: false
+    },
+    prize1: {
+        type: Number,
+        required: false
+    },
+    prize2: {
+        type: Number,
+        required: false
+    },
+    prize3: {
+        type: Number,
+        required: false
     }
 })
 
