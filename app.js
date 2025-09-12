@@ -6,6 +6,7 @@ const session = require("express-session");
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const Razorpay = require('razorpay');
+const MongoStore = require('connect-mongo');
 
 const User = require("./model/User");
 const Tournament = require("./model/Tournament");
@@ -28,6 +29,7 @@ app.use(session({
     secret: "playhive-secret-key",
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
     cookie: {
         maxAge: 3600000, // 1 hour
         secure: process.env.NODE_ENV === 'production',
@@ -324,17 +326,8 @@ app.post('/admin/tournament/delete/:id', isAdmin, async (req, res) => {
     }
 });
 
-// Remove app.listen, export app for Vercel
+// Only this should be at the end:
 module.exports = app;
 
-// Vercel configuration
-{
-  "version": 2,
-  "builds": [
-    { "src": "app.js", "use": "@vercel/node" }
-  ],
-  "routes": [
-    { "src": "/(.*)", "dest": "app.js" }
-  ]
-}
+
 
