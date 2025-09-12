@@ -328,7 +328,9 @@ app.post('/admin/tournament/delete/:id', isAdmin, async (req, res) => {
         res.status(500).send('Failed to delete tournament');
     }
 });
-
+// app.listen(3000,()=>{
+//     console.log("http://localhost:3000");
+// })
 // Only this should be at the end:
 module.exports = app;
 
