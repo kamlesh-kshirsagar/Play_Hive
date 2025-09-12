@@ -13,7 +13,7 @@ const Tournament = require("./model/Tournament");
 const Transaction = require("./model/Transaction");
 
 let app = express();
-
+app.use(express.static('public'));
 // Use environment variable for MongoDB URI
 mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://kamleshkshirsagar80:whTthlQRbsPUkKHV@cluster0.u9ubrnw.mongodb.net/playhiveDB');
 mongoose.connection.once('open', () => console.log('Connected to MongoDB'));
@@ -29,7 +29,9 @@ app.use(session({
     secret: "playhive-secret-key",
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+    store: MongoStore.create({ 
+        mongoUrl: process.env.MONGODB_URI || 'mongodb+srv://kamleshkshirsagar80:whTthlQRbsPUkKHV@cluster0.u9ubrnw.mongodb.net/playhiveDB'
+    }),
     cookie: {
         maxAge: 3600000, // 1 hour
         secure: process.env.NODE_ENV === 'production',
@@ -329,6 +331,7 @@ app.post('/admin/tournament/delete/:id', isAdmin, async (req, res) => {
 
 // Only this should be at the end:
 module.exports = app;
+
 
 
 
