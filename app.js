@@ -12,7 +12,7 @@ const Tournament = require("./model/Tournament");
 const Transaction = require("./model/Transaction");
 
 let app = express();
-mongoose.connect('mongodb://localhost:27017/playhiveDB');
+mongoose.connect('mongodb+srv://kamleshkshirsagar80:whTthlQRbsPUkKHV@cluster0.u9ubrnw.mongodb.net/');
 mongoose.connection.once('open', () => console.log('Connected to MongoDB'));
 
 // Initialize Razorpay
