@@ -12,13 +12,15 @@ const Tournament = require("./model/Tournament");
 const Transaction = require("./model/Transaction");
 
 let app = express();
-mongoose.connect('mongodb+srv://kamleshkshirsagar80:whTthlQRbsPUkKHV@cluster0.u9ubrnw.mongodb.net/');
+
+// Use environment variable for MongoDB URI
+mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://kamleshkshirsagar80:whTthlQRbsPUkKHV@cluster0.u9ubrnw.mongodb.net/playhiveDB');
 mongoose.connection.once('open', () => console.log('Connected to MongoDB'));
 
-// Initialize Razorpay
+// Initialize Razorpay with env variables
 const razorpay = new Razorpay({
-    key_id: 'rzp_test_KEY_HERE', 
-    key_secret: 'SECRET_KEY_HERE'
+    key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_KEY_HERE', 
+    key_secret: process.env.RAZORPAY_KEY_SECRET || 'SECRET_KEY_HERE'
 });
 
 // Session configuration
@@ -322,8 +324,17 @@ app.post('/admin/tournament/delete/:id', isAdmin, async (req, res) => {
     }
 });
 
-let port = process.env.PORT || 3000;
-app.listen(port, function () {
-    console.log("Server Has Started! at http://localhost:3000");
-});
+// Remove app.listen, export app for Vercel
+module.exports = app;
+
+// Vercel configuration
+{
+  "version": 2,
+  "builds": [
+    { "src": "app.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "app.js" }
+  ]
+}
 
