@@ -3,7 +3,7 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 
-mongoose.connect('mongodb+srv://kamleshkshirsagar80:whTthlQRbsPUkKHV@cluster0.u9ubrnw.mongodb.net/playhiveDB').then(() => 
+mongoose.connect('mongodb+srv://kamleshkshirsagar80:<password>@cluster0.u9ubrnw.mongodb.net/playhiveDB').then(() => 
     {
     console.log('Connection Established for User');
 }).catch(err => {

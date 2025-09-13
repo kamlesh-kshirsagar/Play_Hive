@@ -15,7 +15,7 @@ const Transaction = require("./model/Transaction");
 let app = express();
 // app.use(express.static('public'));
 // Use environment variable for MongoDB URI
-mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://kamleshkshirsagar80:whTthlQRbsPUkKHV@cluster0.u9ubrnw.mongodb.net/playhiveDB');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://kamleshkshirsagar80:<password>@cluster0.u9ubrnw.mongodb.net/playhiveDB');
 mongoose.connection.once('open', () => console.log('Connected to MongoDB'));
 
 // Initialize Razorpay with env variables
